@@ -1,0 +1,49 @@
+.app {
+  max-width: 100%;
+  margin: 0 auto;
+  text-align: center;
+  font-family: Roboto, sans-serif !important;
+}
+
+h1 {
+  font-size: 4em;
+  margin-bottom: 10px;
+}
+
+.sub-header {
+  font-size: 23px !important;
+}
+
+.set-alarm-container {
+  margin-top: 10px;
+
+  .date-picker {
+    display: flex;
+    justify-content: center;
+
+    button {
+      display: none !important;
+    }
+  }
+
+  .save {
+    margin-top: 10px;
+  }
+}
+
+.current-time-container {
+  time {
+    display: block;
+  }
+
+  .current-time {
+    font-size: 40px;
+  }
+}
+
+.alarms-paper {
+  width: 300px;
+  height: 185px;
+  margin: auto;
+  overflow-y: auto;
+}
