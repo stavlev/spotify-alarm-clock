@@ -18,7 +18,8 @@ import DateTimePicker from 'material-ui-datetimepicker';
 import moment from 'moment';
 import Clock from 'react-live-clock';
 import uuidV4 from 'uuid/v4';
-import RingDialog from './RingDialog';
+import RingDialog from './components/RingDialog';
+import Login from "./components/Login";
 
 class App extends Component {
   constructor(props) {
@@ -135,6 +136,7 @@ class App extends Component {
                         </div>
                     </List>
                 </Paper>
+                <Login/>
                 <RingDialog checkIfAlarm={this.checkIfAlarm} />
             </div>
         </MuiThemeProvider>
