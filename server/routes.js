@@ -20,7 +20,7 @@ const generateRandomString = N => (Math.random().toString(36) + Array(N).join('0
 router.get('/login', function (req, res) {
 
     var state = generateRandomString(16);
-    res.cookie(stateKey, state);
+    res.cookie(STATE_KEY, state);
 
     // your application requests authorization
     res.redirect('https://accounts.spotify.com/authorize?' +
@@ -37,7 +37,7 @@ router.get('/callback', function (req, res) {
     // your application requests refresh and access tokens after checking the state parameter
     var code = req.query.code || null;
     var state = req.query.state || null;
-    var storedState = req.cookies ? req.cookies[stateKey] : null;
+    var storedState = req.cookies ? req.cookies[STATE_KEY] : null;
 
     if (state === null || state !== storedState) {
         res.redirect('/#' +
