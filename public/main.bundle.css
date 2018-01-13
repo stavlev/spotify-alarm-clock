@@ -1,0 +1,139 @@
+.app {
+  max-width: 100%;
+  margin: 0 auto;
+  text-align: center;
+  font-family: Roboto, sans-serif !important; }
+
+h1 {
+  font-size: 4em;
+  margin-bottom: 10px; }
+
+.sub-header {
+  font-size: 23px !important; }
+
+.set-alarm-container {
+  margin-top: 10px; }
+  .set-alarm-container .date-picker {
+    display: flex;
+    justify-content: center; }
+    .set-alarm-container .date-picker button {
+      display: none !important; }
+  .set-alarm-container .save {
+    margin-top: 10px; }
+
+.current-time-container time {
+  display: block; }
+
+.current-time-container .current-time {
+  font-size: 40px; }
+
+.alarms-paper {
+  width: 300px;
+  height: 185px;
+  margin: auto;
+  overflow-y: auto; }
+
+:root {
+  --accent-color: #648F00;
+  --error-color: #FB654A;
+  --secondary-text-color: #c1c1c1; }
+
+* {
+  outline: none;
+  box-sizing: border-box; }
+
+body {
+  padding: 0;
+  margin: 0; }
+
+html, body, .spotify-login {
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  right: 0; }
+
+body, button, input {
+  font-family: "HelveticaNeue-Light","Helvetica Neue Light","Helvetica Neue",Helvetica,Arial,"Lucida Grande",sans-serif;
+  font-size: 1em; }
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 0;
+  font-family: "HelveticaNeue-UltraLight", "Helvetica Neue UltraLight", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif; }
+
+h1 {
+  font-size: 2.25em;
+  font-weight: normal; }
+
+h2 {
+  font-size: 1.75em;
+  font-weight: normal;
+  margin-bottom: 20px; }
+
+h3 {
+  font-size: 1.5em;
+  font-weight: normal; }
+
+h4 {
+  font-size: 1.25em;
+  font-weight: normal; }
+
+h5 {
+  font-size: 1em;
+  font-weight: normal; }
+
+h6 {
+  font-size: 1em;
+  font-weight: normal; }
+
+ul {
+  list-style: none;
+  margin: 0;
+  padding: 0; }
+
+a:visited, a:link {
+  color: var(--secondary-text-color); }
+
+a:hover, a:active {
+  color: var(--accent-color); }
+
+.spotify-login h1 {
+  background-color: var(--accent-color);
+  color: #fff;
+  padding: 20px 50px; }
+
+.spotify-login .page-content {
+  padding: 10px 50px 50px 50px;
+  display: flex;
+  flex-direction: column; }
+
+.spotify-login .login {
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 50px;
+  text-align: center; }
+  .spotify-login .login .login-btn .spotify-btn .main {
+    fill: var(--accent-color); }
+  .spotify-login .login .login-btn .spotify-btn:hover .main {
+    fill: black; }
+
+.spotify-login .error {
+  color: var(--error-color); }
+  .spotify-login .error, .spotify-login .error h2 {
+    font-weight: bold; }
+
+.spotify-login .user .user-content {
+  display: flex;
+  align-items: center; }
+  .spotify-login .user .user-content img {
+    width: 200px;
+    height: 200px; }
+  .spotify-login .user .user-content ul li {
+    display: flex;
+    padding: 3px 0px; }
+    .spotify-login .user .user-content ul li span:first-child {
+      width: 150px;
+      text-align: right;
+      margin-right: 20px; }
+    .spotify-login .user .user-content ul li span:last-child {
+      flex: 1; }

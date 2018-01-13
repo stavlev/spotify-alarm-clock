@@ -7,7 +7,7 @@ module.exports = {
     entry: [
         'babel-polyfill',
         path.join(__dirname, '../client/src/index'),
-        '../client/src/styles/index.scss'
+        path.join(__dirname, '../client/src/styles/index.scss'),
     ],
     output: {
         path: path.join(__dirname, '../public/'),
@@ -46,7 +46,6 @@ module.exports = {
             },
         }),
         // optimizations
-        new webpack.optimize.DedupePlugin(),
         new webpack.optimize.OccurrenceOrderPlugin(),
         new webpack.optimize.UglifyJsPlugin({
             compress: {
