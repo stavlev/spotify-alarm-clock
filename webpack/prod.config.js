@@ -6,7 +6,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 module.exports = {
     entry: [
         'babel-polyfill',
-        path.join(__dirname, '../client/src/index'),
+        path.join(__dirname, '../client/src/index.js'),
         path.join(__dirname, '../client/src/styles/index.scss'),
     ],
     output: {
@@ -17,19 +17,20 @@ module.exports = {
     module: {
         rules: [
             {
+                // take all scss files, compile them, and bundle them in with our js bundle
                 test: /\.scss$/,
                 exclude: [path.resolve(__dirname, "node_modules")],
                 use: ExtractTextPlugin.extract({
                     fallback: 'style-loader',
-                    use: ['css-loader','sass-loader']
+                    use: ['css-loader', 'sass-loader']
                 })
             },
-        ],
-        loaders: [
-            {test: /\.svg$/, loaders: ['raw-loader']},
-            // take all scss files, compile them, and bundle them in with our js bundle
             {
-                test: /\.js$/,
+                test: /\.svg$/,
+                loader: 'raw-loader',
+            },
+            {
+                test: /\.(js|jsx)$/,
                 exclude: /node_modules/,
                 loader: 'babel-loader',
                 query: {
@@ -55,7 +56,8 @@ module.exports = {
         new ExtractTextPlugin({
             filename: '../public/[name].bundle.css',
             disable: false,
-            allChunks: true,}),
+            allChunks: true,
+        }),
         new HtmlWebpackPlugin({
             title: 'Extract Text Webpack Plugin',
             filename: 'auto-generator.html',
