@@ -2,7 +2,7 @@
   "name": "spotify-library-tone",
   "version": "0.0.1",
   "description": "Analyze the tone of your Spotify library with IBM Watson",
-  "main": "index.js",
+  "main": "client/src/index.js",
   "scripts": {
     "start": "better-npm-run start",
     "build": "better-npm-run build",
