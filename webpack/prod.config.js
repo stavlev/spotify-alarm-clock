@@ -19,7 +19,7 @@ module.exports = {
             {
                 // take all scss files, compile them, and bundle them in with our js bundle
                 test: /\.scss$/,
-                exclude: [path.resolve(__dirname, "node_modules")],
+                exclude: /node_modules/,
                 use: ExtractTextPlugin.extract({
                     fallback: 'style-loader',
                     use: ['css-loader', 'sass-loader'],
@@ -46,11 +46,18 @@ module.exports = {
                 loader: 'raw-loader',
             },
             {
-                test: /\.(js|jsx)$/,
-                exclude: /node_modules/,
+                test: /\.jsx$/,
                 loader: 'babel-loader',
                 query: {
                     presets: ['es2015', 'react'],
+                },
+            },
+            {
+                test: /\.js$/,
+                loader: 'babel-loader',
+                exclude: /node_modules/,
+                query: {
+                    presets: ['es2015', 'react', 'stage-0'],
                 },
             },
         ],
