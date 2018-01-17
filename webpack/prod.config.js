@@ -82,9 +82,8 @@ module.exports = {
             allChunks: true,
         }),
         new HtmlWebpackPlugin({
-            title: 'Extract Text Webpack Plugin',
-            filename: 'auto-generator.html',
-            template: './public/index.html',
+            template: './client/src/index.html',
+            filename: '../public/index.html', //relative to root of the application
             minify: false
         }),
     ],
