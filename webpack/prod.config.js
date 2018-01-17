@@ -77,14 +77,14 @@ module.exports = {
             },
         }),
         new ExtractTextPlugin({
-            filename: '../public/[name].bundle.css',
+            filename: '[name].bundle.css',
             disable: false,
             allChunks: true,
         }),
         new HtmlWebpackPlugin({
             template: './client/src/index.html',
             filename: '../public/index.html', //relative to root of the application
-            minify: false
+            minify: false,
         }),
     ],
 };
