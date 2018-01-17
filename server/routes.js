@@ -12,7 +12,7 @@ const CLIENT_SECRET = 'bd85912da96043899085baf2433c8488';
 const REDIRECT_URI = 'http://localhost:8888/callback';
 const STATE_KEY = 'spotify_auth_state';
 
-const scopes = ['user-read-private', 'user-read-email', 'user-library-read'];
+const scope = 'user-read-private user-read-email user-library-read';
 
 /** Generates a random string containing numbers and letters of N characters */
 const generateRandomString = N => (Math.random().toString(36) + Array(N).join('0')).slice(2, N + 2);
@@ -27,7 +27,7 @@ router.get('/login', function (req, res) {
         querystring.stringify({
             response_type: 'code',
             client_id: CLIENT_ID,
-            scope: scopes,
+            scope: scope,
             redirect_uri: REDIRECT_URI,
             state: state
         }));
