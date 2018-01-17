@@ -1,6 +1,5 @@
 'use strict';
 
-const Spotify = require('spotify-web-api-node');
 const querystring = require('querystring');
 const express = require('express'); // Express web server framework
 const router = new express.Router();
@@ -22,7 +21,6 @@ router.get('/login', function (req, res) {
     var state = generateRandomString(16);
     res.cookie(STATE_KEY, state);
 
-    // your application requests authorization
     res.redirect('https://accounts.spotify.com/authorize?' +
         querystring.stringify({
             response_type: 'code',
@@ -40,10 +38,7 @@ router.get('/callback', function (req, res) {
     var storedState = req.cookies ? req.cookies[STATE_KEY] : null;
 
     if (state === null || state !== storedState) {
-        res.redirect('/#' +
-            querystring.stringify({
-                error: 'state_mismatch'
-            }));
+        res.redirect('/#/error/state mismatch');
     }
     else {
         res.clearCookie(STATE_KEY);
@@ -102,67 +97,13 @@ router.get('/callback', function (req, res) {
                 });
 
                 // we can also pass the token to the browser to make requests from there
-                res.redirect('/#' +
-                    querystring.stringify({
-                        access_token: access_token,
-                        refresh_token: refresh_token
-                    }));
+                res.redirect('/#/alarm/${access_token}/${refresh_token}');
             }
             else {
-                res.redirect('/#' +
-                    querystring.stringify({
-                        error: 'invalid_token'
-                    }));
+                res.redirect('/#/error/invalid token');
             }
         });
     }
 });
 
 module.exports = router;
-
-/*/!**
- * The /login endpoint
- * Redirect the client to the spotify authorize url, but first set that user's
- * state in the cookie.
- *!/
-router.get('/login', (_, res) => {
-    const state = generateRandomString(16);
-    res.cookie(STATE_KEY, state);
-    res.redirect(spotifyApi.createAuthorizeURL(scopes, state));
-});*/
-
-/**
- * The /callback endpoint - hit after the user logs in to spotifyApi
- * Verify that the state we put in the cookie matches the state in the query
- * parameter. Then, if all is good, redirect the user to the user page. If all
- * is not good, redirect the user to an error page
- */
-/*router.get('/callback', (req, res) => {
-    const {code, state} = req.query;
-    const storedState = req.cookies ? req.cookies[STATE_KEY] : null;
-    // first do state validation
-    if (state === null || state !== storedState) {
-        res.redirect('/#/error/state mismatch');
-        // if the state is valid, get the authorization code and pass it on to the client
-    } else {
-        res.clearCookie(STATE_KEY);
-        // Retrieve an access token and a refresh token
-        spotifyApi.authorizationCodeGrant(code).then(data => {
-            const {expires_in, access_token, refresh_token} = data.body;
-
-            // Set the access token on the API object to use it in later calls
-            spotifyApi.setAccessToken(access_token);
-            spotifyApi.setRefreshToken(refresh_token);
-
-            // use the access token to access the Spotify Web API
-            spotifyApi.getMe().then(({body}) => {
-                console.log(body);
-            });
-
-            // we can also pass the token to the browser to make requests from there
-            res.redirect(`/#/user/${access_token}/${refresh_token}`);
-        }).catch(err => {
-            res.redirect('/#/error/invalid token');
-        });
-    }
-});*/

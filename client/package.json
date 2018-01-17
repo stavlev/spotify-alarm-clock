@@ -38,6 +38,7 @@
       "resolved": "https://registry.npmjs.org/fbjs/-/fbjs-0.8.16.tgz",
       "version": "0.8.16"
     },
+    "history": "^4.7.2",
     "iconv-lite": {
       "integrity": "sha512-oTZqweIP51xaGPI4uPa56/Pri/480R+mo7SeU+YETByQNhDG55ycFyNLIgta9vXhILrxXDmF7ZGhqZIcuN0gJQ==",
       "resolved": "https://registry.npmjs.org/iconv-lite/-/iconv-lite-0.4.19.tgz",
@@ -110,8 +111,13 @@
     "react-analog-clock": "^2.0.0",
     "react-dom": "^16.2.0",
     "react-live-clock": "^2.0.2",
+    "react-redux": "^5.0.6",
+    "react-router": "^4.2.0",
+    "react-router-redux": "^4.0.8",
     "react-scripts": "^1.0.17",
     "react-sound": "^1.0.0",
+    "redux": "^3.7.2",
+    "redux-thunk": "^2.2.0",
     "ruby": "^0.6.1",
     "sass": "^1.0.0-beta.4",
     "scss": "^0.2.4",
