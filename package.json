@@ -23,7 +23,7 @@
       }
     },
     "dev": {
-      "command": "node --harmony_destructuring_assignment server/app.js",
+      "command": "webpack --config webpack/dev.config.js --progress --colors",
       "env": {
         "NODE_ENV": "development"
       }
