@@ -47,7 +47,6 @@ class Alarm extends Component {
     }
 
     checkIfAlarm(openDialog) {
-        console.log("alarm!");
         const rangAlarms = [];
         forEach(alarm => {
             if (alarm.dateTime.isSame(new Date(), 'minute') && alarm.isActive) {
