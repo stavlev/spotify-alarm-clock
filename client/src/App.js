@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {MuiThemeProvider, getMuiTheme} from 'material-ui/styles';
 import lightBaseTheme from 'material-ui/styles/baseThemes/lightBaseTheme';
 
-class App extends Component {
+export default class App extends Component {
     render() {
         // injected via react router
         const {children} = this.props;
@@ -15,5 +15,3 @@ class App extends Component {
         );
     }
 }
-
-export default App;

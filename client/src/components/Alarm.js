@@ -1,11 +1,5 @@
 import React, {Component} from 'react';
-import {
-    map,
-    addIndex,
-    forEach,
-    filter,
-    any
-} from 'ramda';
+import {map, addIndex, forEach, filter, any} from 'ramda';
 import {Paper, RaisedButton, Subheader, TextField, List, ListItem} from 'material-ui';
 import DeviceAccessAlarm from 'material-ui/svg-icons/device/access-alarm';
 import ActionAlarmAdd from 'material-ui/svg-icons/action/alarm-add';
@@ -19,7 +13,7 @@ import uuidV4 from 'uuid/v4';
 import RingDialog from './RingDialog';
 import {getMyInfo, setTokens} from "../actions/actions";
 
-class Alarm extends Component {
+export default class Alarm extends Component {
     constructor(props) {
         super(props);
 
@@ -146,5 +140,3 @@ class Alarm extends Component {
         );
     }
 }
-
-export default Alarm;
