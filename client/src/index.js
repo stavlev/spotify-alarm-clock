@@ -3,8 +3,8 @@ import ReactDOM from 'react-dom';
 import {createStore, applyMiddleware, combineReducers} from 'redux';
 import thunkMiddleware from 'redux-thunk';
 import {Provider} from 'react-redux';
-import {createBrowserHistory} from 'history';
-import {Router, Route, IndexRoute, browserHistory, Switch} from 'react-router';
+import createBrowserHistory from 'history/lib/createBrowserHistory';
+import {Router, Route, IndexRoute, browserHistory} from 'react-router';
 import {syncHistoryWithStore, routerMiddleware, routerReducer} from 'react-router-redux';
 import './styles/index.css';
 import reducer from './reducers';
@@ -24,11 +24,9 @@ class Root extends Component {
             <Provider store={store}>
                 <Router history={history}>
                     <App>
-                        <Switch>
-                            <IndexRoute exact path="/login" component={Login}/>
-                            <Route path="/alarm/:accessToken/:refreshToken" component={Alarm}/>
-                            <Route path="/error/:errorMsg" component={Error}/>
-                        </Switch>
+                        <Route exact path="/login" component={Login}/>
+                        <Route path="/alarm/:accessToken/:refreshToken" component={Alarm}/>
+                        <Route path="/error/:errorMsg" component={Error}/>
                     </App>
                 </Router>
             </Provider>

@@ -1,6 +1,7 @@
 const path = require('path');
 const webpack = require('webpack');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
     devtool: 'cheap-module-source-map',
@@ -93,6 +94,11 @@ module.exports = {
             filename: '[name].bundle.css',
             disable: false,
             allChunks: true,
+        }),
+        new HtmlWebpackPlugin({
+            template: './client/src/index.html',
+            filename: '../public/index.html', //relative to root of the application
+            minify: false,
         }),
     ],
 };
