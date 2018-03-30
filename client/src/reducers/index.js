@@ -1,12 +1,19 @@
-import {
-    SPOTIFY_TOKENS, SPOTIFY_ME_BEGIN, SPOTIFY_ME_SUCCESS, SPOTIFY_ME_FAILURE, SPOTIFY_SET_TOKENS,
-    SPOTIFY_USER_REQUESTED, SPOTIFY_USER_SUCCESS, SPOTIFY_USER_FAILURE
-} from '../actions/actions';
+import * as ActionTypes  from '../actions/actionTypes';
+import { filter, any } from 'ramda';
+import moment from 'moment';
+import uuidV4 from 'uuid/v4';
+import Sound from 'react-sound';
 
-/** The initial state; no tokens and no user info */
 const initialState = {
     accessToken: null,
     refreshToken: null,
+    alarms: [],
+    newAlarm: {
+        id: uuidV4(),
+        dateTime: moment(),
+        message: "",
+        isActive: true
+    },
     user: {
         loading: false,
         country: null,
@@ -20,33 +27,99 @@ const initialState = {
         product: null,
         type: null,
         uri: null,
+    },
+    open: false,
+    playStatus: Sound.status.STOPPED,
+    alarm: {
+        id: uuidV4(),
+        dateTime: moment(),
+        message: "",
+        isActive: true
     }
 };
 
-/**
- * Our reducer
- */
-export default function reduce(state = initialState, action) {
+export default function alarmReducer(state = initialState, action) {
     switch (action.type) {
-        // when we get the tokens... set the tokens!
-        case SPOTIFY_SET_TOKENS:
+        case ActionTypes.SPOTIFY_SET_TOKENS:
             const {accessToken, refreshToken} = action;
             return Object.assign({}, state, {accessToken, refreshToken});
 
-        // set our loading property when the loading begins
-        case SPOTIFY_USER_REQUESTED:
+        case ActionTypes.SPOTIFY_USER_REQUESTED:
             return Object.assign({}, state, {
                 user: Object.assign({}, state.user, {loading: true})
             });
 
-        // when we get the data merge it in
-        case SPOTIFY_USER_SUCCESS:
+        case ActionTypes.SPOTIFY_USER_SUCCESS:
             return Object.assign({}, state, {
                 user: Object.assign({}, state.user, action.data, {loading: false})
             });
 
-        // currently no failure state :(
-        case SPOTIFY_USER_FAILURE:
+        case ActionTypes.CHANGE_DATE_TIME:
+            console.log("datetime changed");
+            console.log(state);
+            console.log(action.dateTime);
+
+            return {
+                ...state,
+                newAlarm: {
+                    ...state.newAlarm,
+                    dateTime: action.dateTime
+                }
+            };
+
+        case ActionTypes.CHANGE_MESSAGE:
+            console.log("message changed");
+            console.log(state);
+            console.log(action.message);
+
+            return {
+                ...state,
+                newAlarm: {
+                    ...state.newAlarm,
+                    message: action.message
+                }
+            };
+
+        case ActionTypes.SAVE_NEW_ALARM:
+            return {
+                ...state,
+                alarms: [...state.alarms, action.newAlarm],
+                newAlarm: {
+                    id: uuidV4(),
+                    dateTime: moment(),
+                    message: "",
+                    isActive: true
+                }
+            };
+
+        case ActionTypes.REMOVE_OLD_ALARMS:
+            return {
+                ...state,
+                alarms: filter(alarm => !any(rangAlarm => rangAlarm === alarm, action.rangAlarms), state.alarms)
+            };
+
+        case ActionTypes.HANDLE_OPEN:
+            return {
+                ...state,
+                open: true,
+                playStatus: Sound.status.PLAYING,
+                alarm: action.alarm
+            };
+
+        case ActionTypes.HANDLE_CLOSE:
+            return {
+                ...state,
+                open: false,
+                playStatus: Sound.status.STOPPED,
+                alarm: {
+                    id: uuidV4(),
+                    dateTime: moment(),
+                    message: "",
+                    isActive: true
+                }
+            };
+
+        case ActionTypes.SPOTIFY_USER_FAILURE:
             return state;
 
         default:

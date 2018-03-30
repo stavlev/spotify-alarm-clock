@@ -1,28 +1,65 @@
 import Spotify from 'spotify-web-api-js';
+import * as ActionTypes from './actionTypes';
 
 const spotifyApi = new Spotify();
 
-export const SPOTIFY_SET_TOKENS = 'SPOTIFY_SET_TOKENS';
-export const SPOTIFY_USER_REQUESTED = 'SPOTIFY_USER_REQUESTED';
-export const SPOTIFY_USER_SUCCESS = 'SPOTIFY_USER_SUCCESS';
-export const SPOTIFY_USER_FAILURE = 'SPOTIFY_USER_FAILURE';
+export const changeDateTime = (newDateTime) => {
+    return {
+        type: ActionTypes.CHANGE_DATE_TIME,
+        dateTime: newDateTime
+    };
+};
+
+export const changeMessage = (newMessage) => {
+    return {
+        type: ActionTypes.CHANGE_MESSAGE,
+        message: newMessage
+    };
+};
+
+export const saveNewAlarm = (newAlarm) => {
+    return {
+        type: ActionTypes.SAVE_NEW_ALARM,
+        newAlarm: newAlarm
+    };
+};
+
+export const removeOldAlarms = (rangAlarms) => {
+    return {
+        type: ActionTypes.REMOVE_OLD_ALARMS,
+        rangAlarms: rangAlarms
+    };
+};
+
+export const handleOpen = (alarm) => {
+    return {
+        type: ActionTypes.HANDLE_OPEN,
+        alarm: alarm
+    };
+};
+
+export const handleClose = () => {
+    return {
+        type: ActionTypes.HANDLE_CLOSE
+    };
+};
 
 /** set the app's access and refresh tokens */
 export function setTokens({accessToken, refreshToken}) {
     if (accessToken) {
         spotifyApi.setAccessToken(accessToken);
     }
-    return { type: SPOTIFY_SET_TOKENS, accessToken, refreshToken };
+    return { type: ActionTypes.SPOTIFY_SET_TOKENS, accessToken, refreshToken };
 }
 
 /* get the user's info from the /me api */
 export function getMyInfo() {
     return dispatch => {
-        dispatch({ type: SPOTIFY_USER_REQUESTED});
+        dispatch({ type: ActionTypes.SPOTIFY_USER_REQUESTED});
         spotifyApi.getMe().then(data => {
-            dispatch({ type: SPOTIFY_USER_SUCCESS, data: data });
+            dispatch({ type: ActionTypes.SPOTIFY_USER_SUCCESS, data: data });
         }).catch(e => {
-            dispatch({ type: SPOTIFY_USER_FAILURE, error: e });
+            dispatch({ type: ActionTypes.SPOTIFY_USER_FAILURE, error: e });
         });
     };
 }

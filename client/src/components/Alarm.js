@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
-import {map, addIndex, forEach, filter, any} from 'ramda';
+import { connect } from 'react-redux';
+import {map, addIndex, forEach} from 'ramda';
 import {Paper, RaisedButton, Subheader, TextField, List, ListItem} from 'material-ui';
 import DeviceAccessAlarm from 'material-ui/svg-icons/device/access-alarm';
 import ActionAlarmAdd from 'material-ui/svg-icons/action/alarm-add';
@@ -7,89 +8,49 @@ import Toggle from 'material-ui/Toggle';
 import DatePickerDialog from 'material-ui/DatePicker/DatePickerDialog'
 import TimePickerDialog from 'material-ui/TimePicker/TimePickerDialog';
 import DateTimePicker from 'material-ui-datetimepicker';
-import moment from 'moment';
 import Clock from 'react-live-clock';
-import uuidV4 from 'uuid/v4';
 import RingDialog from './RingDialog';
-import {getMyInfo, setTokens} from "../actions/actions";
+import {getMyInfo,
+        setTokens,
+        changeDateTime,
+        changeMessage,
+        saveNewAlarm,
+        removeOldAlarms} from "../actions/actions";
 
-export default class Alarm extends Component {
+export class Alarm extends Component {
     constructor(props) {
         super(props);
-
-        this.state = {
-            alarms: [],
-            newAlarm: {
-                id: uuidV4(),
-                dateTime: moment(),
-                message: "",
-                isActive: true
-            }
-        };
-
-        this.checkIfAlarm = this.checkIfAlarm.bind(this);
-        this.handleDateTimeChange = this.handleDateTimeChange.bind(this);
-        this.handleMessageChange = this.handleMessageChange.bind(this);
-        this.saveNewAlarm = this.saveNewAlarm.bind(this);
     }
 
     componentDidMount() {
         const {dispatch, params} = this.props;
         const {accessToken, refreshToken} = params;
+
         dispatch(setTokens({accessToken, refreshToken}));
         dispatch(getMyInfo());
     }
 
-    checkIfAlarm(openDialog) {
+    checkIfAlarm = (openDialog) => {
+        const {dispatch, alarms} = this.props;
         const rangAlarms = [];
+
         forEach(alarm => {
             if (alarm.dateTime.isSame(new Date(), 'minute') && alarm.isActive) {
-                openDialog({...alarm});
+                dispatch(openDialog({...alarm}));
                 rangAlarms.push(alarm);
             }
-        }, this.state.alarms);
-        this.setState({
-            alarms: filter(alarm => !any(rangAlarm => rangAlarm === alarm, rangAlarms), this.state.alarms)
-        });
+        }, alarms);
+
+        dispatch(removeOldAlarms(rangAlarms));
     };
 
-    handleDateTimeChange(newDateTime) {
-        this.setState(prevState => ({
-            newAlarm: {
-                ...prevState.newAlarm,
-                dateTime: newDateTime
-            }
-        }));
-    }
-
-    handleMessageChange(event, value) {
-        this.setState(prevState => ({
-            newAlarm: {
-                ...prevState.newAlarm,
-                message: value
-            }
-        }));
-    }
-
-    saveNewAlarm() {
-        this.setState(prevState => ({
-            alarms: [...prevState.alarms, this.state.newAlarm],
-            newAlarm: {
-                id: uuidV4(),
-                dateTime: moment(),
-                message: "",
-                isActive: true
-            }
-        }));
-    }
-
     render() {
-        const user = this.props;
+        const {dispatch, user, newAlarm, alarms} = this.props;
 
         return (
             <div>
                 <h1>Alarm Clock</h1>
-                <h2>{`Logged in as ${user.display_name}`}</h2>
+                <h2>{`Logged in as ${user.id}`}</h2>
                 <div className="current-time-container">
                     <Subheader className="sub-header">Current Time: </Subheader>
                     <Clock className="current-time" format={'HH:mm:ss'} ticking={true}/>
@@ -104,14 +65,14 @@ export default class Alarm extends Component {
                         TimePicker={TimePickerDialog}
                         floatingLabelText="Set alarm date"
                         minDate={new Date()}
-                        value={this.state.newAlarm.dateTime}
-                        onChange={this.handleDateTimeChange}
+                        value={newAlarm.dateTime}
+                        onChange={v => dispatch(changeDateTime(v))}
                     />
-                    <TextField className="message" floatingLabelText="Add Message" value={this.state.newAlarm.message}
-                               onChange={this.handleMessageChange} floatingLabelFixed={true}/>
+                    <TextField className="message" floatingLabelText="Add Message" value={newAlarm.message}
+                               onChange={(ev, v) => dispatch(changeMessage(v))} floatingLabelFixed={true}/>
                     <br/>
                     <RaisedButton className="save" label="Save Alarm" primary={true}
-                                  onClick={this.saveNewAlarm} icon={<ActionAlarmAdd/>}/>
+                                  onClick={() => dispatch(saveNewAlarm(newAlarm))} icon={<ActionAlarmAdd/>}/>
                 </div>
                 <Subheader className="sub-header">Alarms:</Subheader>
                 <Paper className="alarms-paper" zDepth={2}>
@@ -130,13 +91,32 @@ export default class Alarm extends Component {
                                             />
                                         </div>
                                     )
-                                }, this.state.alarms)
+                                }, alarms)
                             }
                         </div>
                     </List>
                 </Paper>
-                <RingDialog checkIfAlarm={this.checkIfAlarm}/>
+                <RingDialog dispatch={dispatch}
+                            checkIfAlarm={this.checkIfAlarm}
+                            open={this.props.open}
+                            alarm={this.props.alarm}
+                            playStatus={this.props.playStatus} />
             </div>
         );
     }
 }
+
+const mapStateToProps = (state) => {
+    return {
+        newAlarm: state.newAlarm,
+        alarms: state.alarms,
+        accessToken: state.accessToken,
+        refreshToken: state.refreshToken,
+        user: state.user,
+        open: state.open,
+        alarm: state.alarm,
+        playStatus: state.playStatus
+    }
+}
+
+export default connect(mapStateToProps)(Alarm);

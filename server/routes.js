@@ -97,7 +97,7 @@ router.get('/callback', function (req, res) {
                 });
 
                 // we can also pass the token to the browser to make requests from there
-                res.redirect('/#/alarm/${access_token}/${refresh_token}');
+                res.redirect(`/#/alarm/${access_token}/${refresh_token}`);
             }
             else {
                 res.redirect('/#/error/invalid token');

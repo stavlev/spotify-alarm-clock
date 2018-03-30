@@ -1,33 +1,33 @@
 import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
-import {createStore, applyMiddleware, combineReducers} from 'redux';
-import thunkMiddleware from 'redux-thunk';
+import {createStore, applyMiddleware} from 'redux';
+import thunk from 'redux-thunk';
 import {Provider} from 'react-redux';
-import createBrowserHistory from 'history/lib/createBrowserHistory';
-import {Router, Route, IndexRoute, browserHistory} from 'react-router';
-import {syncHistoryWithStore, routerMiddleware, routerReducer} from 'react-router-redux';
+import {Router, Route, IndexRoute, hashHistory} from 'react-router';
+import {syncHistory, routerMiddleware, routerReducer} from 'react-router-redux';
 import './styles/index.css';
-import reducer from './reducers';
+import alarmReducer from './reducers';
 import App from './App';
 import Login from "./components/Login";
 import Alarm from "./components/Alarm";
 
-const store = createStore(combineReducers({
-    alarm: reducer,
-    routing: routerReducer
-}), undefined, applyMiddleware(routerMiddleware(browserHistory), thunkMiddleware));
-const history = syncHistoryWithStore(createBrowserHistory(), store);
+const reduxRouterMiddleware = syncHistory(hashHistory);
+const createStoreWithMiddleware = applyMiddleware(
+    thunk,
+    reduxRouterMiddleware
+)(createStore);
+const store = createStoreWithMiddleware(alarmReducer);
 
 class Root extends Component {
     render() {
         return (
             <Provider store={store}>
-                <Router history={history}>
-                    <App>
-                        <Route exact path="/login" component={Login}/>
+                <Router history={hashHistory}>
+                    <Route path="/" component={App}>
+                        <IndexRoute component={Login} />
                         <Route path="/alarm/:accessToken/:refreshToken" component={Alarm}/>
                         <Route path="/error/:errorMsg" component={Error}/>
-                    </App>
+                    </Route>
                 </Router>
             </Provider>
         );
