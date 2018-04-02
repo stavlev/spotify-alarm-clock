@@ -66,10 +66,6 @@ export default function alarmReducer(state = initialState, action) {
             });
 
         case ActionTypes.CHANGE_DATE_TIME:
-            console.log("datetime changed");
-            console.log(state);
-            console.log(action.dateTime);
-
             return {
                 ...state,
                 newAlarm: {
@@ -79,10 +75,6 @@ export default function alarmReducer(state = initialState, action) {
             };
 
         case ActionTypes.CHANGE_MESSAGE:
-            console.log("message changed");
-            console.log(state);
-            console.log(action.message);
-
             return {
                 ...state,
                 newAlarm: {

@@ -68,11 +68,12 @@ export const getMySavedTracks = () => {
     return dispatch => {
         dispatch({ type: ActionTypes.SPOTIFY_FAVORITE_TRACKS_REQUESTED});
         spotifyApi.getMySavedTracks({limit: 50})
-            .then(data => {
-            console.log('saved tracks', data);
-            dispatch({type: ActionTypes.SPOTIFY_FAVORITE_TRACKS_SUCCESS, data: data.items});
-        }).catch(error => {
-            dispatch({ type: ActionTypes.SPOTIFY_FAVORITE_TRACKS_FAILURE, error: error });
+            .then(data => data.items.map(t => t.track.id))
+            .then(trackIds => spotifyApi.getAudioFeaturesForTracks(trackIds))
+            .then(tracks => {
+                dispatch({type: ActionTypes.SPOTIFY_FAVORITE_TRACKS_SUCCESS, data: tracks.audio_features});
+            }).catch(error => {
+                dispatch({ type: ActionTypes.SPOTIFY_FAVORITE_TRACKS_FAILURE, error: error });
         });
     };
 };
