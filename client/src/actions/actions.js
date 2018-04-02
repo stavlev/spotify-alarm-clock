@@ -45,15 +45,15 @@ export const handleClose = () => {
 };
 
 /** set the app's access and refresh tokens */
-export function setTokens({accessToken, refreshToken}) {
+export const setTokens = ({accessToken, refreshToken}) => {
     if (accessToken) {
         spotifyApi.setAccessToken(accessToken);
     }
     return { type: ActionTypes.SPOTIFY_SET_TOKENS, accessToken, refreshToken };
-}
+};
 
 /* get the user's info from the /me api */
-export function getMyInfo() {
+export const getMyInfo = () => {
     return dispatch => {
         dispatch({ type: ActionTypes.SPOTIFY_USER_REQUESTED});
         spotifyApi.getMe().then(data => {
@@ -62,4 +62,17 @@ export function getMyInfo() {
             dispatch({ type: ActionTypes.SPOTIFY_USER_FAILURE, error: e });
         });
     };
-}
+};
+
+export const getMySavedTracks = () => {
+    return dispatch => {
+        dispatch({ type: ActionTypes.SPOTIFY_FAVORITE_TRACKS_REQUESTED});
+        spotifyApi.getMySavedTracks({limit: 50})
+            .then(data => {
+            console.log('saved tracks', data);
+            dispatch({type: ActionTypes.SPOTIFY_FAVORITE_TRACKS_SUCCESS, data: data.items});
+        }).catch(error => {
+            dispatch({ type: ActionTypes.SPOTIFY_FAVORITE_TRACKS_FAILURE, error: error });
+        });
+    };
+};

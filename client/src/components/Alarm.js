@@ -15,19 +15,22 @@ import {getMyInfo,
         changeDateTime,
         changeMessage,
         saveNewAlarm,
-        removeOldAlarms} from "../actions/actions";
+        removeOldAlarms,
+        getMySavedTracks
+} from "../actions/actions";
 
 export class Alarm extends Component {
     constructor(props) {
         super(props);
     }
 
-    componentDidMount() {
+    componentWillMount() {
         const {dispatch, params} = this.props;
         const {accessToken, refreshToken} = params;
 
         dispatch(setTokens({accessToken, refreshToken}));
         dispatch(getMyInfo());
+        dispatch(getMySavedTracks());
     }
 
     checkIfAlarm = (openDialog) => {

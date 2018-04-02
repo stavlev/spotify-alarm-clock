@@ -28,6 +28,7 @@ const initialState = {
         type: null,
         uri: null,
     },
+    tracks: [],
     open: false,
     playStatus: Sound.status.STOPPED,
     alarm: {
@@ -52,6 +53,16 @@ export default function alarmReducer(state = initialState, action) {
         case ActionTypes.SPOTIFY_USER_SUCCESS:
             return Object.assign({}, state, {
                 user: Object.assign({}, state.user, action.data, {loading: false})
+            });
+
+        case ActionTypes.SPOTIFY_FAVORITE_TRACKS_REQUESTED:
+            return Object.assign({}, state, {
+                tracks: Object.assign({}, state.tracks)
+            });
+
+        case ActionTypes.SPOTIFY_FAVORITE_TRACKS_SUCCESS:
+            return Object.assign({}, state, {
+                tracks: Object.assign({}, state.tracks, action.data)
             });
 
         case ActionTypes.CHANGE_DATE_TIME:
@@ -120,6 +131,9 @@ export default function alarmReducer(state = initialState, action) {
             };
 
         case ActionTypes.SPOTIFY_USER_FAILURE:
+            return state;
+
+        case ActionTypes.SPOTIFY_FAVORITE_TRACKS_FAILURE:
             return state;
 
         default:
