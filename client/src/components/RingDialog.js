@@ -4,7 +4,7 @@ import Dialog from 'material-ui/Dialog';
 import RaisedButton from 'material-ui/RaisedButton';
 import ActionAlarmOff from 'material-ui/svg-icons/action/alarm-off';
 import Sound from 'react-sound';
-import {handleOpen, handleClose} from '../actions/actions';
+import {handleOpen, handleClose, chooseTrack} from '../actions/actions';
 
 const customTitleStyle = {
     textAlign: 'center',
@@ -27,7 +27,8 @@ export default class RingDialog extends React.Component {
     }
 
     componentDidMount() {
-        setInterval(() => this.props.checkIfAlarm(handleOpen), 1000);
+        setInterval(() => this.props.checkIfAlarm(handleOpen), 1000);               // Check every second
+        setInterval(() => this.props.checkIfAlarmRingsSoon(chooseTrack), 60000);    // Check every minute
     }
 
     render() {
@@ -72,6 +73,7 @@ export default class RingDialog extends React.Component {
 RingDialog.propTypes = {
     dispatch: PropTypes.func.isRequired,
     checkIfAlarm: PropTypes.func.isRequired,
+    checkIfAlarmRingsSoon: PropTypes.func.isRequired,
     open: PropTypes.bool.isRequired,
     alarm: PropTypes.object.isRequired,
     playStatus: PropTypes.string.isRequired,

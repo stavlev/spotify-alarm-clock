@@ -8,6 +8,11 @@ const initialState = {
     accessToken: null,
     refreshToken: null,
     alarms: [],
+    sleepQualityInfo: {
+        pLastSleepCycleInterrupted: 0,
+        pAverageHeartRateAbnormal: 0,
+        pAverageOxygenLevelAbnormal: 0
+    },
     newAlarm: {
         id: uuidV4(),
         dateTime: moment(),
@@ -55,15 +60,25 @@ export default function alarmReducer(state = initialState, action) {
                 user: Object.assign({}, state.user, action.data, {loading: false})
             });
 
-        case ActionTypes.SPOTIFY_FAVORITE_TRACKS_REQUESTED:
+        case ActionTypes.CHOOSE_TRACK_REQUESTED:
             return Object.assign({}, state, {
-                tracks: Object.assign({}, state.tracks)
+                choseTracks: Object.assign({}, state.chosenTrack)
             });
 
-        case ActionTypes.SPOTIFY_FAVORITE_TRACKS_SUCCESS:
+        case ActionTypes.CHOOSE_TRACK_SUCCESS:
             return Object.assign({}, state, {
-                tracks: Object.assign({}, state.tracks, action.data)
+                tracks: Object.assign({}, state.chosenTrack, action.data)
             });
+
+        case ActionTypes.GET_SLEEP_QUALITY_INFO:
+            return {
+                ...state,
+                sleepQualityInfo: {
+                    pLastSleepCycleInterrupted: randomProbability(),
+                    pAverageHeartRateAbnormal: randomProbability(),
+                    pAverageOxygenLevelAbnormal: randomProbability()
+                }
+            };
 
         case ActionTypes.CHANGE_DATE_TIME:
             return {
@@ -125,10 +140,20 @@ export default function alarmReducer(state = initialState, action) {
         case ActionTypes.SPOTIFY_USER_FAILURE:
             return state;
 
-        case ActionTypes.SPOTIFY_FAVORITE_TRACKS_FAILURE:
+        case ActionTypes.CHOOSE_TRACK_FAILURE:
             return state;
 
         default:
             return state;
     }
+}
+
+function randomProbability() {
+    var randomProbability = randomInRange(0,1);
+    return randomProbability;
+}
+
+function randomInRange(min, max) {
+    var randomDouble = Math.random() * (max-min) + min;
+    return randomDouble;
 }

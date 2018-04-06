@@ -16,7 +16,6 @@ import {getMyInfo,
         changeMessage,
         saveNewAlarm,
         removeOldAlarms,
-        getMySavedTracks
 } from "../actions/actions";
 
 export class Alarm extends Component {
@@ -30,7 +29,6 @@ export class Alarm extends Component {
 
         dispatch(setTokens({accessToken, refreshToken}));
         dispatch(getMyInfo());
-        dispatch(getMySavedTracks());
     }
 
     checkIfAlarm = (openDialog) => {
@@ -45,6 +43,21 @@ export class Alarm extends Component {
         }, alarms);
 
         dispatch(removeOldAlarms(rangAlarms));
+    };
+
+    checkIfAlarmRingsSoon = (chooseTrack) => {
+        const {dispatch, alarms} = this.props;
+
+        forEach(alarm => {
+            var diffMs = (alarm.datetime - (new Date()));                       // milliseconds between now & the alarm time
+            var diffMins = Math.round(((diffMs % 86400000) % 3600000) / 60000); // diff in minutes
+
+            var isAlarmAboutToRingInAMinute = diffMins == 1;
+
+            if (isAlarmAboutToRingInAMinute) {
+                dispatch(chooseTrack());
+            }
+        }, alarms);
     };
 
     render() {
@@ -101,6 +114,7 @@ export class Alarm extends Component {
                 </Paper>
                 <RingDialog dispatch={dispatch}
                             checkIfAlarm={this.checkIfAlarm}
+                            checkIfAlarmRingsSoon={this.checkIfAlarmRingsSoon}
                             open={this.props.open}
                             alarm={this.props.alarm}
                             playStatus={this.props.playStatus} />
@@ -111,6 +125,7 @@ export class Alarm extends Component {
 
 const mapStateToProps = (state) => {
     return {
+        sleepQualityInfo: state.sleepQualityInfo,
         newAlarm: state.newAlarm,
         alarms: state.alarms,
         accessToken: state.accessToken,

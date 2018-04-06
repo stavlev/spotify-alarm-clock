@@ -69,35 +69,14 @@ router.get('/callback', function (req, res) {
 
                 // use the access token to access the Spotify Web API
                 request.get(userRequestParams, function (error, response, body) {
-                    var tracksRequestParams = {
-                        url: 'https://api.spotify.com/v1/me/tracks',
-                        headers: {
-                            'Authorization': 'Bearer ' + access_token
-                        },
-                        json: true
-                    };
-
-                    // use the access token to access the Spotify Web API
-                    request.get(tracksRequestParams, function (error, response, body) {
-                        console.log(body);
-
-                        var previewUrls = body.items.map(element => element.track.preview_url);
-
-                        function hasPreviewUrl(url) {
-                            return url != null
-                        };
-
-                        var validPreviewUrls = previewUrls.filter(hasPreviewUrl);
-                        console.log(validPreviewUrls);
-
-                        var randomTrackIndex = Math.floor((Math.random() * validPreviewUrls.length) + 0);
-                        var randomTrackPreviewUrl = validPreviewUrls[randomTrackIndex];
-                        console.log("Track preview url: " + randomTrackPreviewUrl);
-                    });
+                    if (!error && response.statusCode === 200) {
+                        // we can also pass the token to the browser to make requests from there
+                        res.redirect(`/#/alarm/${access_token}/${refresh_token}`);
+                    }
+                    else {
+                        res.redirect('/#/error/invalid token');
+                    }
                 });
-
-                // we can also pass the token to the browser to make requests from there
-                res.redirect(`/#/alarm/${access_token}/${refresh_token}`);
             }
             else {
                 res.redirect('/#/error/invalid token');
