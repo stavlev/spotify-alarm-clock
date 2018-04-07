@@ -34,6 +34,7 @@ const initialState = {
         uri: null,
     },
     tracks: [],
+    chosenTrack: null,
     open: false,
     playStatus: Sound.status.STOPPED,
     alarm: {

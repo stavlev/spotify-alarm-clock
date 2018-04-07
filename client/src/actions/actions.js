@@ -40,7 +40,7 @@ export const removeOldAlarms = (rangAlarms) => {
 export const chooseTrack = () => {
     return dispatch => {
         dispatch({ type: ActionTypes.CHOOSE_TRACK_REQUESTED});
-``
+
         var userSleepQualityInfo = getUserSleepQualityInfo();
 
         // Calculate a number between 0.0-1.0 indicating the probability of how well the user slept

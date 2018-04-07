@@ -125,7 +125,6 @@ export class Alarm extends Component {
 
 const mapStateToProps = (state) => {
     return {
-        sleepQualityInfo: state.sleepQualityInfo,
         newAlarm: state.newAlarm,
         alarms: state.alarms,
         accessToken: state.accessToken,
