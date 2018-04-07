@@ -39,17 +39,14 @@ export class Alarm extends Component {
 
         forEach(alarm => {
             var currentTime = new Date();
+            var oneMinuteBeforeAlarm = moment(alarm.dateTime).subtract(1, "minutes");
 
             if (alarm.dateTime.isSame(currentTime, 'minute') && alarm.isActive) {
                 dispatch(openDialog({...alarm}));
                 rangAlarms.push(alarm);
             }
-            else {
-                var oneMinuteBeforeAlarm = moment(alarm.dateTime).subtract(1, "minutes");
-
-                if (oneMinuteBeforeAlarm.isSame(currentTime, 'minute')) {
-                    dispatch(chooseTrack());
-                }
+            else if (oneMinuteBeforeAlarm.isSame(currentTime, 'second')) {
+                dispatch(chooseTrack());
             }
         }, alarms);
 
@@ -57,7 +54,7 @@ export class Alarm extends Component {
     };
 
     render() {
-        const {dispatch, user, newAlarm, alarms} = this.props;
+        const {dispatch, user, newAlarm, alarms, chosenTrack} = this.props;
 
         return (
             <div>
@@ -112,7 +109,8 @@ export class Alarm extends Component {
                             checkIfAlarm={this.checkIfAlarm}
                             open={this.props.open}
                             alarm={this.props.alarm}
-                            playStatus={this.props.playStatus} />
+                            playStatus={this.props.playStatus}
+                            chosenTrack={chosenTrack} />
             </div>
         );
     }
@@ -127,7 +125,8 @@ const mapStateToProps = (state) => {
         user: state.user,
         open: state.open,
         alarm: state.alarm,
-        playStatus: state.playStatus
+        playStatus: state.playStatus,
+        chosenTrack: state.chosenTrack
     }
 }
 
