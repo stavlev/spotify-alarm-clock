@@ -49,14 +49,14 @@ export const chooseTrack = () => {
 
         spotifyApi.getMySavedTracks({limit: 50})
             .then(data => data.items.map(t => t.track.id))
-            .then(trackIds => spotifyApi.getAudioFeaturesForTracks(trackIds))
-            .then(tracks => {
+            .then(tracksIds => spotifyApi.getAudioFeaturesForTracks(tracksIds))
+            .then(tracksFeatures => {
                 var isMatchingTrackFound = false;
-                var matchingTrack;
+                var matchingTrack = tracksFeatures.audio_features[0];
 
                 var i;
-                for (i = 0; i < tracks.audio_features.length && !isMatchingTrackFound; i++) {
-                    var currTrackFeatures = tracks.audio_features[i];
+                for (i = 0; i < tracksFeatures.audio_features.length && !isMatchingTrackFound; i++) {
+                    var currTrackFeatures = tracksFeatures.audio_features[i];
 
                     var minPossibleDanceability = expectedUserTiredness;
                     var minPossibleEnergy = expectedUserTiredness;
@@ -68,18 +68,16 @@ export const chooseTrack = () => {
                         currTrackFeatures.loudness >= minPossibleLoudness;
 
                     if (isTrackMatching) {
-                        matchingTrack = tracks.audio_features[i];
+                        matchingTrack = currTrackFeatures;
                         isMatchingTrackFound = true;
                     }
                 }
 
-                if (!isMatchingTrackFound) {
-                    matchingTrack = tracks.audio_features[0];
-                }
-
-                dispatch({type: ActionTypes.CHOOSE_TRACK_SUCCESS, data: matchingTrack.track_href});
-            }).catch(error => {
-            dispatch({ type: ActionTypes.CHOOSE_TRACK_FAILURE, error: error });
+                return spotifyApi.getTrack(matchingTrack.id);
+            })
+            .then(chosenTrack => dispatch({type: ActionTypes.CHOOSE_TRACK_SUCCESS, data: chosenTrack.preview_url}))
+            .catch(error => {
+                dispatch({ type: ActionTypes.CHOOSE_TRACK_FAILURE, error: error });
         });
     };
 };
