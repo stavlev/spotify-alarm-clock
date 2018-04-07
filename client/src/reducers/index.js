@@ -8,11 +8,6 @@ const initialState = {
     accessToken: null,
     refreshToken: null,
     alarms: [],
-    sleepQualityInfo: {
-        pLastSleepCycleInterrupted: 0,
-        pAverageHeartRateAbnormal: 0,
-        pAverageOxygenLevelAbnormal: 0
-    },
     newAlarm: {
         id: uuidV4(),
         dateTime: moment(),
@@ -70,16 +65,6 @@ export default function alarmReducer(state = initialState, action) {
             return Object.assign({}, state, {
                 tracks: Object.assign({}, state.chosenTrack, action.data)
             });
-
-        case ActionTypes.GET_SLEEP_QUALITY_INFO:
-            return {
-                ...state,
-                sleepQualityInfo: {
-                    pLastSleepCycleInterrupted: randomProbability(),
-                    pAverageHeartRateAbnormal: randomProbability(),
-                    pAverageOxygenLevelAbnormal: randomProbability()
-                }
-            };
 
         case ActionTypes.CHANGE_DATE_TIME:
             return {
@@ -147,14 +132,4 @@ export default function alarmReducer(state = initialState, action) {
         default:
             return state;
     }
-}
-
-function randomProbability() {
-    var randomProbability = randomInRange(0,1);
-    return randomProbability;
-}
-
-function randomInRange(min, max) {
-    var randomDouble = Math.random() * (max-min) + min;
-    return randomDouble;
 }

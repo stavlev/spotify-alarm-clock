@@ -3,12 +3,6 @@ import * as ActionTypes from './actionTypes';
 
 const spotifyApi = new Spotify();
 
-export const getUserSleepQualityInfo = () => {
-    return {
-        type: ActionTypes.GET_SLEEP_QUALITY_INFO
-    };
-};
-
 export const changeDateTime = (newDateTime) => {
     return {
         type: ActionTypes.CHANGE_DATE_TIME,
@@ -41,7 +35,11 @@ export const chooseTrack = () => {
     return dispatch => {
         dispatch({ type: ActionTypes.CHOOSE_TRACK_REQUESTED});
 
-        var userSleepQualityInfo = getUserSleepQualityInfo();
+        var userSleepQualityInfo = {
+            pLastSleepCycleInterrupted: randomProbability(),
+            pAverageHeartRateAbnormal: randomProbability(),
+            pAverageOxygenLevelAbnormal: randomProbability()
+        };
 
         // Calculate a number between 0.0-1.0 indicating the probability of how well the user slept
         var expectedUserTiredness = (
@@ -114,3 +112,13 @@ export const getMyInfo = () => {
         });
     };
 };
+
+function randomProbability() {
+    var randomProbability = randomInRange(0,1);
+    return randomProbability;
+}
+
+function randomInRange(min, max) {
+    var randomDouble = Math.random() * (max-min) + min;
+    return randomDouble;
+}
