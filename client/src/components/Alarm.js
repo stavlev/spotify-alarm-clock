@@ -16,6 +16,7 @@ import {getMyInfo,
         changeMessage,
         saveNewAlarm,
         removeOldAlarms,
+        chooseTrack
 } from "../actions/actions";
 
 export class Alarm extends Component {
@@ -37,27 +38,13 @@ export class Alarm extends Component {
 
         forEach(alarm => {
             if (alarm.dateTime.isSame(new Date(), 'minute') && alarm.isActive) {
+                dispatch(chooseTrack());
                 dispatch(openDialog({...alarm}));
                 rangAlarms.push(alarm);
             }
         }, alarms);
 
         dispatch(removeOldAlarms(rangAlarms));
-    };
-
-    checkIfAlarmRingsSoon = (chooseTrack) => {
-        const {dispatch, alarms} = this.props;
-
-        forEach(alarm => {
-            var diffMs = (alarm.datetime - (new Date()));                       // milliseconds between now & the alarm time
-            var diffMins = Math.round(((diffMs % 86400000) % 3600000) / 60000); // diff in minutes
-
-            var isAlarmAboutToRingInAMinute = diffMins == 1;
-
-            if (isAlarmAboutToRingInAMinute) {
-                dispatch(chooseTrack());
-            }
-        }, alarms);
     };
 
     render() {
@@ -114,7 +101,6 @@ export class Alarm extends Component {
                 </Paper>
                 <RingDialog dispatch={dispatch}
                             checkIfAlarm={this.checkIfAlarm}
-                            checkIfAlarmRingsSoon={this.checkIfAlarmRingsSoon}
                             open={this.props.open}
                             alarm={this.props.alarm}
                             playStatus={this.props.playStatus} />

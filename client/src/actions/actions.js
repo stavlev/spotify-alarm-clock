@@ -53,7 +53,6 @@ export const chooseTrack = () => {
             .then(data => data.items.map(t => t.track.id))
             .then(trackIds => spotifyApi.getAudioFeaturesForTracks(trackIds))
             .then(tracks => {
-                // TODO: Iterate through the tracks and find the first one matching the userSleepQuality
                 var isMatchingTrackFound = false;
                 var matchingTrack;
 
