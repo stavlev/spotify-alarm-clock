@@ -9,6 +9,7 @@ import DatePickerDialog from 'material-ui/DatePicker/DatePickerDialog'
 import TimePickerDialog from 'material-ui/TimePicker/TimePickerDialog';
 import DateTimePicker from 'material-ui-datetimepicker';
 import Clock from 'react-live-clock';
+import moment from 'moment';
 import RingDialog from './RingDialog';
 import {getMyInfo,
         setTokens,
@@ -37,10 +38,18 @@ export class Alarm extends Component {
         const rangAlarms = [];
 
         forEach(alarm => {
-            if (alarm.dateTime.isSame(new Date(), 'minute') && alarm.isActive) {
-                dispatch(chooseTrack());
+            var currentTime = new Date();
+
+            if (alarm.dateTime.isSame(currentTime, 'minute') && alarm.isActive) {
                 dispatch(openDialog({...alarm}));
                 rangAlarms.push(alarm);
+            }
+            else {
+                var oneMinuteBeforeAlarm = moment(alarm.dateTime).subtract(1, "minutes");
+
+                if (oneMinuteBeforeAlarm.isSame(currentTime, 'minute')) {
+                    dispatch(chooseTrack());
+                }
             }
         }, alarms);
 

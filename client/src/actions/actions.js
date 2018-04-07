@@ -47,7 +47,7 @@ export const chooseTrack = () => {
             userSleepQualityInfo.pAverageHeartRateAbnormal +
             userSleepQualityInfo.pAverageOxygenLevelAbnormal) / 3.0;
 
-        spotifyApi.getMySavedTracks({limit: 500})
+        spotifyApi.getMySavedTracks({limit: 50})
             .then(data => data.items.map(t => t.track.id))
             .then(trackIds => spotifyApi.getAudioFeaturesForTracks(trackIds))
             .then(tracks => {
@@ -68,12 +68,12 @@ export const chooseTrack = () => {
                         currTrackFeatures.loudness >= minPossibleLoudness;
 
                     if (isTrackMatching) {
-                        matchingTrack = tracks[i];
+                        matchingTrack = tracks.audio_features[i];
                         isMatchingTrackFound = true;
                     }
                 }
 
-                dispatch({type: ActionTypes.CHOOSE_TRACK_SUCCESS, data: matchingTrack});
+                dispatch({type: ActionTypes.CHOOSE_TRACK_SUCCESS, data: matchingTrack.track_href});
             }).catch(error => {
             dispatch({ type: ActionTypes.CHOOSE_TRACK_FAILURE, error: error });
         });

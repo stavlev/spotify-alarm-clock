@@ -28,7 +28,6 @@ const initialState = {
         type: null,
         uri: null,
     },
-    tracks: [],
     chosenTrack: null,
     open: false,
     playStatus: Sound.status.STOPPED,
@@ -58,12 +57,12 @@ export default function alarmReducer(state = initialState, action) {
 
         case ActionTypes.CHOOSE_TRACK_REQUESTED:
             return Object.assign({}, state, {
-                choseTracks: Object.assign({}, state.chosenTrack)
+                chosenTrack: Object.assign({}, state.chosenTrack)
             });
 
         case ActionTypes.CHOOSE_TRACK_SUCCESS:
             return Object.assign({}, state, {
-                tracks: Object.assign({}, state.chosenTrack, action.data)
+                chosenTrack: Object.assign({}, state.chosenTrack, action.data)
             });
 
         case ActionTypes.CHANGE_DATE_TIME:
