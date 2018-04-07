@@ -110,7 +110,7 @@ export class Alarm extends Component {
                             open={this.props.open}
                             alarm={this.props.alarm}
                             playStatus={this.props.playStatus}
-                            chosenTrack={chosenTrack} />
+                            chosenTrack={chosenTrack.toString()} />
             </div>
         );
     }

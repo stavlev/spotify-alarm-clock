@@ -63,14 +63,18 @@ export const chooseTrack = () => {
                     var minPossibleLoudness = ((expectedUserTiredness * 60.0) - 60.0);
 
                     var isTrackMatching =
-                        currTrackFeatures.danceability >= minPossibleDanceability &&
-                        currTrackFeatures.energy >= minPossibleEnergy &&
+                        (currTrackFeatures.danceability >= minPossibleDanceability ||
+                         currTrackFeatures.energy >= minPossibleEnergy) &&
                         currTrackFeatures.loudness >= minPossibleLoudness;
 
                     if (isTrackMatching) {
                         matchingTrack = tracks.audio_features[i];
                         isMatchingTrackFound = true;
                     }
+                }
+
+                if (!isMatchingTrackFound) {
+                    matchingTrack = tracks.audio_features[0];
                 }
 
                 dispatch({type: ActionTypes.CHOOSE_TRACK_SUCCESS, data: matchingTrack.track_href});

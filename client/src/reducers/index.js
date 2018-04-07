@@ -28,9 +28,9 @@ const initialState = {
         type: null,
         uri: null,
     },
-    chosenTrack: null,
     open: false,
     playStatus: Sound.status.STOPPED,
+    chosenTrack: '',
     alarm: {
         id: uuidV4(),
         dateTime: moment(),
@@ -55,9 +55,10 @@ export default function alarmReducer(state = initialState, action) {
                 user: Object.assign({}, state.user, action.data, {loading: false})
             });
 
+            // Assign default sound to the alarm
         case ActionTypes.CHOOSE_TRACK_REQUESTED:
             return Object.assign({}, state, {
-                chosenTrack: Object.assign({}, state.chosenTrack)
+                chosenTrack: Object.assign({}, state.chosenTrack, 'https://raw.githubusercontent.com/scottschiller/SoundManager2/master/demo/_mp3/background1.mp3')
             });
 
         case ActionTypes.CHOOSE_TRACK_SUCCESS:

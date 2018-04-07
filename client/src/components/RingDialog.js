@@ -55,7 +55,7 @@ export default class RingDialog extends React.Component {
                 >
                     {
                         <div>
-                            <Sound url="https://raw.githubusercontent.com/scottschiller/SoundManager2/master/demo/_mp3/background1.mp3"
+                            <Sound url={this.props.chosenTrack}
                                    playStatus={this.props.playStatus}
                                    loop={true} />
                             <b>{this.props.alarm.dateTime.format("HH:mm DD-MM-YYYY")}</b>
@@ -75,4 +75,5 @@ RingDialog.propTypes = {
     open: PropTypes.bool.isRequired,
     alarm: PropTypes.object.isRequired,
     playStatus: PropTypes.string.isRequired,
+    chosenTrack: PropTypes.string.isRequired
 };
