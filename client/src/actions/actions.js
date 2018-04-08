@@ -48,7 +48,8 @@ export const chooseTrack = () => {
             userSleepQualityInfo.pAverageOxygenLevelAbnormal) / 3.0;
 
         spotifyApi.getMySavedTracks({limit: 50})
-            .then(data => data.items.map(t => t.track.id))
+            //.then(data => spotifyApi.getGeneric(data.next))
+            .then(data => data.items.filter(t => t.track.preview_url !== null).map(t => t.track.id))
             .then(tracksIds => spotifyApi.getAudioFeaturesForTracks(tracksIds))
             .then(tracksFeatures => {
                 var isMatchingTrackFound = false;
@@ -75,7 +76,7 @@ export const chooseTrack = () => {
 
                 return spotifyApi.getTrack(matchingTrack.id);
             })
-            .then(chosenTrack => dispatch({type: ActionTypes.CHOOSE_TRACK_SUCCESS, data: chosenTrack.preview_url}))
+            .then(chosenTrack => dispatch({type: ActionTypes.CHOOSE_TRACK_SUCCESS, chosenTrack: chosenTrack.preview_url}))
             .catch(error => {
                 dispatch({ type: ActionTypes.CHOOSE_TRACK_FAILURE, error: error });
         });

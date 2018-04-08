@@ -57,14 +57,13 @@ export default function alarmReducer(state = initialState, action) {
 
             // Assign default sound to the alarm
         case ActionTypes.CHOOSE_TRACK_REQUESTED:
-            return Object.assign({}, state, {
-                chosenTrack: Object.assign({}, state.chosenTrack, 'https://raw.githubusercontent.com/scottschiller/SoundManager2/master/demo/_mp3/background1.mp3')
-            });
+            return state;
 
         case ActionTypes.CHOOSE_TRACK_SUCCESS:
-            return Object.assign({}, state, {
-                chosenTrack: Object.assign({}, state.chosenTrack, action.data)
-            });
+            return {
+                ...state,
+                chosenTrack: action.chosenTrack
+            };
 
         case ActionTypes.CHANGE_DATE_TIME:
             return {

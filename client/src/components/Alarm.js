@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 import {map, addIndex, forEach} from 'ramda';
 import {Paper, RaisedButton, Subheader, TextField, List, ListItem} from 'material-ui';
 import DeviceAccessAlarm from 'material-ui/svg-icons/device/access-alarm';
@@ -11,13 +11,14 @@ import DateTimePicker from 'material-ui-datetimepicker';
 import Clock from 'react-live-clock';
 import moment from 'moment';
 import RingDialog from './RingDialog';
-import {getMyInfo,
-        setTokens,
-        changeDateTime,
-        changeMessage,
-        saveNewAlarm,
-        removeOldAlarms,
-        chooseTrack
+import {
+    getMyInfo,
+    setTokens,
+    changeDateTime,
+    changeMessage,
+    saveNewAlarm,
+    removeOldAlarms,
+    chooseTrack
 } from "../actions/actions";
 
 export class Alarm extends Component {
@@ -39,22 +40,20 @@ export class Alarm extends Component {
 
         forEach(alarm => {
             var currentTime = new Date();
-            var oneMinuteBeforeAlarm = moment(alarm.dateTime).subtract(1, "minutes");
 
             if (alarm.dateTime.isSame(currentTime, 'minute') && alarm.isActive) {
+                dispatch(chooseTrack());
                 dispatch(openDialog({...alarm}));
                 rangAlarms.push(alarm);
             }
-            else if (oneMinuteBeforeAlarm.isSame(currentTime, 'second')) {
-                dispatch(chooseTrack());
-            }
+
         }, alarms);
 
         dispatch(removeOldAlarms(rangAlarms));
     };
 
     render() {
-        const {dispatch, user, newAlarm, alarms, chosenTrack} = this.props;
+        const {dispatch, user, newAlarm, alarms} = this.props;
 
         return (
             <div>
@@ -110,7 +109,7 @@ export class Alarm extends Component {
                             open={this.props.open}
                             alarm={this.props.alarm}
                             playStatus={this.props.playStatus}
-                            chosenTrack={chosenTrack.toString()} />
+                            chosenTrack={this.props.chosenTrack}/>
             </div>
         );
     }
@@ -127,7 +126,8 @@ const mapStateToProps = (state) => {
         alarm: state.alarm,
         playStatus: state.playStatus,
         chosenTrack: state.chosenTrack
-    }
-}
+    };
+};
+
 
 export default connect(mapStateToProps)(Alarm);

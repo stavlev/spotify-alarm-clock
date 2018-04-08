@@ -27,7 +27,11 @@ export default class RingDialog extends React.Component {
     }
 
     componentDidMount() {
-        setInterval(() => this.props.checkIfAlarm(handleOpen), 1000); // Check every second
+        setInterval(() => {
+            if (!this.props.open) {
+                this.props.checkIfAlarm(handleOpen)}
+            }
+        , 1000);
     }
 
     render() {
@@ -75,5 +79,5 @@ RingDialog.propTypes = {
     open: PropTypes.bool.isRequired,
     alarm: PropTypes.object.isRequired,
     playStatus: PropTypes.string.isRequired,
-    chosenTrack: PropTypes.string.isRequired
+    chosenTrack: PropTypes.string
 };
