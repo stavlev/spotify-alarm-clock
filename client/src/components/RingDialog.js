@@ -65,6 +65,8 @@ export default class RingDialog extends React.Component {
                             <b>{this.props.alarm.dateTime.format("HH:mm DD-MM-YYYY")}</b>
                             <br />
                             {this.props.alarm.message}
+                            <br />
+                            {this.props.tiredness}
                         </div>
                     }
                 </Dialog>
@@ -79,5 +81,6 @@ RingDialog.propTypes = {
     open: PropTypes.bool.isRequired,
     alarm: PropTypes.object.isRequired,
     playStatus: PropTypes.string.isRequired,
-    chosenTrack: PropTypes.string
+    chosenTrack: PropTypes.string,
+    tiredness: PropTypes.string
 };

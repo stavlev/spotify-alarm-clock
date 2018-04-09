@@ -110,7 +110,9 @@ export class Alarm extends Component {
                             open={this.props.open}
                             alarm={this.props.alarm}
                             playStatus={this.props.playStatus}
-                            chosenTrack={this.props.chosenTrack}/>
+                            chosenTrack={this.props.chosenTrack}
+                            tiredness={this.props.tiredness}
+                />
             </div>
         );
     }
@@ -127,7 +129,8 @@ const mapStateToProps = (state) => {
         alarm: state.alarm,
         playStatus: state.playStatus,
         chosenTrack: state.chosenTrack,
-        tracks: state.tracks
+        tracks: state.tracks,
+        tiredness: state.tiredness
     };
 };
 
