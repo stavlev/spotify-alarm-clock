@@ -2,6 +2,7 @@ import Spotify from 'spotify-web-api-js';
 import * as ActionTypes from './actionTypes';
 
 const spotifyApi = new Spotify();
+const shuffle = require('shuffle-array');
 
 export const changeDateTime = (newDateTime) => {
     return {
@@ -31,8 +32,52 @@ export const removeOldAlarms = (rangAlarms) => {
     };
 };
 
-export const chooseTrack = () => {
+export const getMySavedTracks = () => {
+    let tracks = [];
     return dispatch => {
+        dispatch({ type: ActionTypes.SPOTIFY_FAVORITE_TRACKS_REQUESTED});
+
+        spotifyApi.getMySavedTracks({limit: 50})
+            .then(data => {
+                tracks = tracks.concat(data.items);
+                if (data.next) {
+                    return spotifyApi.getGeneric(data.next);
+                }
+                return data;
+            })
+            .then(data => {
+                if (data.next) {
+                    tracks = tracks.concat(data.items);
+                    return spotifyApi.getGeneric(data.next);
+                }
+                return data;
+            })
+            .then(data => {
+                if (data.next) {
+                    tracks = tracks.concat(data.items);
+                    return spotifyApi.getGeneric(data.next);
+                }
+                return data;
+            })
+            .then(data => {
+                if (data) {
+                    tracks = tracks.concat(data.items);
+                }
+                return tracks.filter(t => t.track.preview_url !== null).map(t => t.track.id);
+            })
+            .then(tracksIds => spotifyApi.getAudioFeaturesForTracks(tracksIds))
+            .then(tracks => {
+                console.log(tracks.audio_features);
+                dispatch({type: ActionTypes.SPOTIFY_FAVORITE_TRACKS_SUCCESS, tracks: tracks.audio_features});
+            }).catch(error => {
+            dispatch({type: ActionTypes.SPOTIFY_FAVORITE_TRACKS_FAILURE, error: error});
+        });
+    };
+};
+
+export const chooseTrack = (tracks) => {
+       var tracksFeatures = shuffle(tracks, { 'copy': true });
+       return dispatch => {
         dispatch({ type: ActionTypes.CHOOSE_TRACK_REQUESTED});
 
         var userSleepQualityInfo = {
@@ -47,35 +92,29 @@ export const chooseTrack = () => {
             userSleepQualityInfo.pAverageHeartRateAbnormal +
             userSleepQualityInfo.pAverageOxygenLevelAbnormal) / 3.0;
 
-        spotifyApi.getMySavedTracks({limit: 50})
-            //.then(data => spotifyApi.getGeneric(data.next))
-            .then(data => data.items.filter(t => t.track.preview_url !== null).map(t => t.track.id))
-            .then(tracksIds => spotifyApi.getAudioFeaturesForTracks(tracksIds))
-            .then(tracksFeatures => {
-                var isMatchingTrackFound = false;
-                var matchingTrack = tracksFeatures.audio_features[0];
+            var isMatchingTrackFound = false;
+            var matchingTrack = tracksFeatures[0];
 
-                var i;
-                for (i = 0; i < tracksFeatures.audio_features.length && !isMatchingTrackFound; i++) {
-                    var currTrackFeatures = tracksFeatures.audio_features[i];
+            var i;
+            for (i = 0; i < tracksFeatures.length && !isMatchingTrackFound; i++) {
+                var currTrackFeatures = tracksFeatures[i];
 
-                    var minPossibleDanceability = expectedUserTiredness;
-                    var minPossibleEnergy = expectedUserTiredness;
-                    var minPossibleLoudness = ((expectedUserTiredness * 60.0) - 60.0);
+                var minPossibleDanceability = expectedUserTiredness;
+                var minPossibleEnergy = expectedUserTiredness;
+                var minPossibleLoudness = ((expectedUserTiredness * 60.0) - 60.0);
 
-                    var isTrackMatching =
-                        (currTrackFeatures.danceability >= minPossibleDanceability ||
-                         currTrackFeatures.energy >= minPossibleEnergy) &&
-                        currTrackFeatures.loudness >= minPossibleLoudness;
+                var isTrackMatching =
+                    (currTrackFeatures.danceability >= minPossibleDanceability ||
+                     currTrackFeatures.energy >= minPossibleEnergy) &&
+                    currTrackFeatures.loudness >= minPossibleLoudness;
 
-                    if (isTrackMatching) {
-                        matchingTrack = currTrackFeatures;
-                        isMatchingTrackFound = true;
-                    }
+                if (isTrackMatching) {
+                    matchingTrack = currTrackFeatures;
+                    isMatchingTrackFound = true;
                 }
+            }
 
-                return spotifyApi.getTrack(matchingTrack.id);
-            })
+            spotifyApi.getTrack(matchingTrack.id)
             .then(chosenTrack => dispatch({type: ActionTypes.CHOOSE_TRACK_SUCCESS, chosenTrack: chosenTrack.preview_url}))
             .catch(error => {
                 dispatch({ type: ActionTypes.CHOOSE_TRACK_FAILURE, error: error });

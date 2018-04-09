@@ -31,6 +31,7 @@ const initialState = {
     open: false,
     playStatus: Sound.status.STOPPED,
     chosenTrack: '',
+    tracks: [],
     alarm: {
         id: uuidV4(),
         dateTime: moment(),
@@ -63,6 +64,15 @@ export default function alarmReducer(state = initialState, action) {
             return {
                 ...state,
                 chosenTrack: action.chosenTrack
+            };
+
+        case ActionTypes.SPOTIFY_FAVORITE_TRACKS_REQUESTED:
+            return state;
+
+        case ActionTypes.SPOTIFY_FAVORITE_TRACKS_SUCCESS:
+            return {
+                ...state,
+                tracks: [...state.tracks, ...action.tracks]
             };
 
         case ActionTypes.CHANGE_DATE_TIME:
@@ -114,6 +124,7 @@ export default function alarmReducer(state = initialState, action) {
                 ...state,
                 open: false,
                 playStatus: Sound.status.STOPPED,
+                chosenTrack: "",
                 alarm: {
                     id: uuidV4(),
                     dateTime: moment(),
@@ -126,6 +137,9 @@ export default function alarmReducer(state = initialState, action) {
             return state;
 
         case ActionTypes.CHOOSE_TRACK_FAILURE:
+            return state;
+
+        case ActionTypes.SPOTIFY_FAVORITE_TRACKS_FAILURE:
             return state;
 
         default:

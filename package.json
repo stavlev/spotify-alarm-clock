@@ -95,6 +95,7 @@
     "sass-loader": "^6.0.6",
     "scss": "^0.2.4",
     "setimmediate": "1.0.5",
+    "shuffle-array": "^1.0.1",
     "soundmanager2": "2.97.20170602",
     "spotify-web-api-js": "^0.23.0",
     "spotify-web-api-node": "^2.2.0",

@@ -9,7 +9,6 @@ import DatePickerDialog from 'material-ui/DatePicker/DatePickerDialog'
 import TimePickerDialog from 'material-ui/TimePicker/TimePickerDialog';
 import DateTimePicker from 'material-ui-datetimepicker';
 import Clock from 'react-live-clock';
-import moment from 'moment';
 import RingDialog from './RingDialog';
 import {
     getMyInfo,
@@ -18,7 +17,8 @@ import {
     changeMessage,
     saveNewAlarm,
     removeOldAlarms,
-    chooseTrack
+    chooseTrack,
+    getMySavedTracks
 } from "../actions/actions";
 
 export class Alarm extends Component {
@@ -32,17 +32,18 @@ export class Alarm extends Component {
 
         dispatch(setTokens({accessToken, refreshToken}));
         dispatch(getMyInfo());
+        dispatch(getMySavedTracks());
     }
 
     checkIfAlarm = (openDialog) => {
-        const {dispatch, alarms} = this.props;
+        const {dispatch, alarms, tracks} = this.props;
         const rangAlarms = [];
 
         forEach(alarm => {
             var currentTime = new Date();
 
             if (alarm.dateTime.isSame(currentTime, 'minute') && alarm.isActive) {
-                dispatch(chooseTrack());
+                dispatch(chooseTrack(tracks));
                 dispatch(openDialog({...alarm}));
                 rangAlarms.push(alarm);
             }
@@ -125,7 +126,8 @@ const mapStateToProps = (state) => {
         open: state.open,
         alarm: state.alarm,
         playStatus: state.playStatus,
-        chosenTrack: state.chosenTrack
+        chosenTrack: state.chosenTrack,
+        tracks: state.tracks
     };
 };
 
