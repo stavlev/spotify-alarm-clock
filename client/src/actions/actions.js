@@ -102,11 +102,13 @@ export const chooseTrack = (tracks) => {
                 var minPossibleDanceability = expectedUserTiredness;
                 var minPossibleEnergy = expectedUserTiredness;
                 var minPossibleLoudness = ((expectedUserTiredness * 60.0) - 60.0);
+                var mode = expectedUserTiredness > 0.5 ? 0 : 1;
 
                 var isTrackMatching =
                     (currTrackFeatures.danceability >= minPossibleDanceability ||
                      currTrackFeatures.energy >= minPossibleEnergy) &&
-                    currTrackFeatures.loudness >= minPossibleLoudness;
+                     currTrackFeatures.loudness >= minPossibleLoudness &&
+                     currTrackFeatures.mode === mode;
 
                 if (isTrackMatching) {
                     matchingTrack = currTrackFeatures;
@@ -115,7 +117,8 @@ export const chooseTrack = (tracks) => {
             }
 
             spotifyApi.getTrack(matchingTrack.id)
-            .then(chosenTrack => dispatch({type: ActionTypes.CHOOSE_TRACK_SUCCESS, chosenTrack: chosenTrack.preview_url}))
+            .then(chosenTrack => dispatch({type: ActionTypes.CHOOSE_TRACK_SUCCESS, chosenTrack: chosenTrack.preview_url,
+                tiredness: expectedUserTiredness}))
             .catch(error => {
                 dispatch({ type: ActionTypes.CHOOSE_TRACK_FAILURE, error: error });
         });
