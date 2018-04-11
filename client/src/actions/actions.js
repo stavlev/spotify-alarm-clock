@@ -83,11 +83,13 @@ export const chooseTrack = (tracks) => {
         var userSleepQualityInfo = {
             pLastSleepCycleInterrupted: randomProbability(),
             pAverageHeartRateAbnormal: randomProbability(),
-            pAverageOxygenLevelAbnormal: randomProbability()
+            pAverageOxygenLevelAbnormal: randomProbability(),
+            sleepDuration: randomInt(1, 16)
         };
 
         // Calculate a number between 0.0-1.0 indicating the probability of how well the user slept
         var expectedUserTiredness = (
+            (1 / userSleepQualityInfo.sleepDuration) +
             userSleepQualityInfo.pLastSleepCycleInterrupted +
             userSleepQualityInfo.pAverageHeartRateAbnormal +
             userSleepQualityInfo.pAverageOxygenLevelAbnormal) / 3.0;
@@ -166,4 +168,8 @@ function randomProbability() {
 function randomInRange(min, max) {
     var randomDouble = Math.random() * (max-min) + min;
     return randomDouble;
+}
+
+function randomInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
 }
