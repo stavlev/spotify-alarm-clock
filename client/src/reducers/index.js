@@ -32,7 +32,6 @@ const initialState = {
     playStatus: Sound.status.STOPPED,
     chosenTrack: '',
     tracks: [],
-    tiredness: "",
     isSleepQualityInputReceived: false,
     alarm: {
         id: uuidV4(),
@@ -66,7 +65,6 @@ export default function alarmReducer(state = initialState, action) {
             return {
                 ...state,
                 chosenTrack: action.chosenTrack,
-                tiredness: action.tiredness > 0.5 ? "You slept very bad" : "You slept very good"
             };
 
         case ActionTypes.SPOTIFY_FAVORITE_TRACKS_REQUESTED:
@@ -128,7 +126,6 @@ export default function alarmReducer(state = initialState, action) {
                 open: false,
                 playStatus: Sound.status.STOPPED,
                 chosenTrack: "",
-                tiredness: "",
                 alarm: {
                     id: uuidV4(),
                     dateTime: moment(),

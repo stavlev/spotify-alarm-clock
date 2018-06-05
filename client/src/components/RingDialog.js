@@ -67,8 +67,6 @@ export default class RingDialog extends React.Component {
                             <br/>
                             {this.props.alarm.message}
                             <br/>
-                            {this.props.tiredness}
-                            <br/>
                             <p>Have you slept well?</p>
                             <button onClick={() => dispatch(handleUserSleepQualityInput(true))}
                                     disabled={this.props.isSleepQualityInputReceived}>
@@ -94,5 +92,4 @@ RingDialog.propTypes = {
     playStatus: PropTypes.string.isRequired,
     isSleepQualityInputReceived: PropTypes.bool.isRequired,
     chosenTrack: PropTypes.string,
-    tiredness: PropTypes.string,
 };

@@ -111,7 +111,6 @@ export class Alarm extends Component {
                             alarm={this.props.alarm}
                             playStatus={this.props.playStatus}
                             chosenTrack={this.props.chosenTrack}
-                            tiredness={this.props.tiredness}
                             isSleepQualityInputReceived={this.props.isSleepQualityInputReceived}
                 />
             </div>
@@ -131,7 +130,6 @@ const mapStateToProps = (state) => {
         playStatus: state.playStatus,
         chosenTrack: state.chosenTrack,
         tracks: state.tracks,
-        tiredness: state.tiredness,
         isSleepQualityInputReceived: state.isSleepQualityInputReceived,
     };
 };

@@ -75,24 +75,10 @@ export const getMySavedTracks = () => {
     };
 };
 
-export const chooseTrack = (tracks) => {
+export const chooseTrack = (tracks, didUserSleepWellInput) => {
     var tracksFeatures = shuffle(tracks, {'copy': true});
     return dispatch => {
         dispatch({type: ActionTypes.CHOOSE_TRACK_REQUESTED});
-
-        var userSleepQualityInfo = {
-            pLastSleepCycleInterrupted: randomProbability(),
-            pAverageHeartRateAbnormal: randomProbability(),
-            pAverageOxygenLevelAbnormal: randomProbability(),
-            sleepDuration: randomInt(1, 16)
-        };
-
-        // Calculate a number between 0.0-1.0 indicating the probability of how well the user slept
-        var expectedUserTiredness = (
-            (1 / userSleepQualityInfo.sleepDuration) +
-            userSleepQualityInfo.pLastSleepCycleInterrupted +
-            userSleepQualityInfo.pAverageHeartRateAbnormal +
-            userSleepQualityInfo.pAverageOxygenLevelAbnormal) / 3.0;
 
         var isMatchingTrackFound = false;
         var matchingTrack = tracksFeatures[0];
@@ -101,16 +87,16 @@ export const chooseTrack = (tracks) => {
         for (i = 0; i < tracksFeatures.length && !isMatchingTrackFound; i++) {
             var currTrackFeatures = tracksFeatures[i];
 
-            var minPossibleDanceability = expectedUserTiredness;
-            var minPossibleEnergy = expectedUserTiredness;
-            var minPossibleLoudness = ((expectedUserTiredness * 60.0) - 60.0);
-            var mode = expectedUserTiredness > 0.5 ? 0 : 1;
+            var minPossibleDanceability = didUserSleepWellInput ? 0.83 : 0.54;  // 0.83 = 363/437, 0.54 = 237/437
+            var minPossibleEnergy = didUserSleepWellInput ? 0.125 : 0.17;       // 0.125 = 55/437, 0.17 = 74/437
+            var minPossibleLoudness = (((didUserSleepWellInput ? 0.41 : 0.22) * 60.0) - 60.0);  // 0.41 = 177/437, 0.22 = 97/437
+            var minPossibleValence = didUserSleepWellInput ? 0.95 : 0.82;       // 0.95 = 417/437, 0.82 = 360/437
 
             var isTrackMatching =
-                (currTrackFeatures.danceability >= minPossibleDanceability ||
-                    currTrackFeatures.energy >= minPossibleEnergy) &&
+                currTrackFeatures.danceability >= minPossibleDanceability &&
+                currTrackFeatures.energy >= minPossibleEnergy &&
                 currTrackFeatures.loudness >= minPossibleLoudness &&
-                currTrackFeatures.mode === mode;
+                currTrackFeatures.valence >= minPossibleValence;
 
             if (isTrackMatching) {
                 matchingTrack = currTrackFeatures;
@@ -121,7 +107,6 @@ export const chooseTrack = (tracks) => {
         spotifyApi.getTrack(matchingTrack.id)
             .then(chosenTrack => dispatch({
                 type: ActionTypes.CHOOSE_TRACK_SUCCESS, chosenTrack: chosenTrack.preview_url,
-                tiredness: expectedUserTiredness
             }))
             .catch(error => {
                 dispatch({type: ActionTypes.CHOOSE_TRACK_FAILURE, error: error});
