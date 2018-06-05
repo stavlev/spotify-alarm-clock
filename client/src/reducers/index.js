@@ -33,6 +33,7 @@ const initialState = {
     chosenTrack: '',
     tracks: [],
     tiredness: "",
+    isSleepQualityInputReceived: false,
     alarm: {
         id: uuidV4(),
         dateTime: moment(),
@@ -134,6 +135,12 @@ export default function alarmReducer(state = initialState, action) {
                     message: "",
                     isActive: true
                 }
+            };
+
+        case ActionTypes.HANDLE_USER_SLEEP_QUALITY_INPUT:
+            return {
+                ...state,
+                isSleepQualityInputReceived: true,
             };
 
         case ActionTypes.SPOTIFY_USER_FAILURE:

@@ -35,7 +35,7 @@ export const removeOldAlarms = (rangAlarms) => {
 export const getMySavedTracks = () => {
     let tracks = [];
     return dispatch => {
-        dispatch({ type: ActionTypes.SPOTIFY_FAVORITE_TRACKS_REQUESTED});
+        dispatch({type: ActionTypes.SPOTIFY_FAVORITE_TRACKS_REQUESTED});
 
         spotifyApi.getMySavedTracks({limit: 50})
             .then(data => {
@@ -76,9 +76,9 @@ export const getMySavedTracks = () => {
 };
 
 export const chooseTrack = (tracks) => {
-       var tracksFeatures = shuffle(tracks, { 'copy': true });
-       return dispatch => {
-        dispatch({ type: ActionTypes.CHOOSE_TRACK_REQUESTED});
+    var tracksFeatures = shuffle(tracks, {'copy': true});
+    return dispatch => {
+        dispatch({type: ActionTypes.CHOOSE_TRACK_REQUESTED});
 
         var userSleepQualityInfo = {
             pLastSleepCycleInterrupted: randomProbability(),
@@ -94,36 +94,38 @@ export const chooseTrack = (tracks) => {
             userSleepQualityInfo.pAverageHeartRateAbnormal +
             userSleepQualityInfo.pAverageOxygenLevelAbnormal) / 3.0;
 
-            var isMatchingTrackFound = false;
-            var matchingTrack = tracksFeatures[0];
+        var isMatchingTrackFound = false;
+        var matchingTrack = tracksFeatures[0];
 
-            var i;
-            for (i = 0; i < tracksFeatures.length && !isMatchingTrackFound; i++) {
-                var currTrackFeatures = tracksFeatures[i];
+        var i;
+        for (i = 0; i < tracksFeatures.length && !isMatchingTrackFound; i++) {
+            var currTrackFeatures = tracksFeatures[i];
 
-                var minPossibleDanceability = expectedUserTiredness;
-                var minPossibleEnergy = expectedUserTiredness;
-                var minPossibleLoudness = ((expectedUserTiredness * 60.0) - 60.0);
-                var mode = expectedUserTiredness > 0.5 ? 0 : 1;
+            var minPossibleDanceability = expectedUserTiredness;
+            var minPossibleEnergy = expectedUserTiredness;
+            var minPossibleLoudness = ((expectedUserTiredness * 60.0) - 60.0);
+            var mode = expectedUserTiredness > 0.5 ? 0 : 1;
 
-                var isTrackMatching =
-                    (currTrackFeatures.danceability >= minPossibleDanceability ||
-                     currTrackFeatures.energy >= minPossibleEnergy) &&
-                     currTrackFeatures.loudness >= minPossibleLoudness &&
-                     currTrackFeatures.mode === mode;
+            var isTrackMatching =
+                (currTrackFeatures.danceability >= minPossibleDanceability ||
+                    currTrackFeatures.energy >= minPossibleEnergy) &&
+                currTrackFeatures.loudness >= minPossibleLoudness &&
+                currTrackFeatures.mode === mode;
 
-                if (isTrackMatching) {
-                    matchingTrack = currTrackFeatures;
-                    isMatchingTrackFound = true;
-                }
+            if (isTrackMatching) {
+                matchingTrack = currTrackFeatures;
+                isMatchingTrackFound = true;
             }
+        }
 
-            spotifyApi.getTrack(matchingTrack.id)
-            .then(chosenTrack => dispatch({type: ActionTypes.CHOOSE_TRACK_SUCCESS, chosenTrack: chosenTrack.preview_url,
-                tiredness: expectedUserTiredness}))
+        spotifyApi.getTrack(matchingTrack.id)
+            .then(chosenTrack => dispatch({
+                type: ActionTypes.CHOOSE_TRACK_SUCCESS, chosenTrack: chosenTrack.preview_url,
+                tiredness: expectedUserTiredness
+            }))
             .catch(error => {
-                dispatch({ type: ActionTypes.CHOOSE_TRACK_FAILURE, error: error });
-        });
+                dispatch({type: ActionTypes.CHOOSE_TRACK_FAILURE, error: error});
+            });
     };
 };
 
@@ -140,33 +142,37 @@ export const handleClose = () => {
     };
 };
 
+export const handleUserSleepQualityInput = (didUserSleepWell) => {
+    return {type: ActionTypes.HANDLE_USER_SLEEP_QUALITY_INPUT, didUserSleepWell};
+};
+
 /** set the app's access and refresh tokens */
 export const setTokens = ({accessToken, refreshToken}) => {
     if (accessToken) {
         spotifyApi.setAccessToken(accessToken);
     }
-    return { type: ActionTypes.SPOTIFY_SET_TOKENS, accessToken, refreshToken };
+    return {type: ActionTypes.SPOTIFY_SET_TOKENS, accessToken, refreshToken};
 };
 
 /** get the user's info from the /me api */
 export const getMyInfo = () => {
     return dispatch => {
-        dispatch({ type: ActionTypes.SPOTIFY_USER_REQUESTED});
+        dispatch({type: ActionTypes.SPOTIFY_USER_REQUESTED});
         spotifyApi.getMe().then(data => {
-            dispatch({ type: ActionTypes.SPOTIFY_USER_SUCCESS, data: data });
+            dispatch({type: ActionTypes.SPOTIFY_USER_SUCCESS, data: data});
         }).catch(e => {
-            dispatch({ type: ActionTypes.SPOTIFY_USER_FAILURE, error: e });
+            dispatch({type: ActionTypes.SPOTIFY_USER_FAILURE, error: e});
         });
     };
 };
 
 function randomProbability() {
-    var randomProbability = randomInRange(0,1);
+    var randomProbability = randomInRange(0, 1);
     return randomProbability;
 }
 
 function randomInRange(min, max) {
-    var randomDouble = Math.random() * (max-min) + min;
+    var randomDouble = Math.random() * (max - min) + min;
     return randomDouble;
 }
 

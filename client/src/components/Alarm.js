@@ -43,7 +43,7 @@ export class Alarm extends Component {
             var currentTime = new Date();
 
             if (alarm.dateTime.isSame(currentTime, 'minute') && alarm.isActive) {
-                dispatch(chooseTrack(tracks));
+                /*dispatch(chooseTrack(tracks));*/
                 dispatch(openDialog({...alarm}));
                 rangAlarms.push(alarm);
             }
@@ -112,6 +112,7 @@ export class Alarm extends Component {
                             playStatus={this.props.playStatus}
                             chosenTrack={this.props.chosenTrack}
                             tiredness={this.props.tiredness}
+                            isSleepQualityInputReceived={this.props.isSleepQualityInputReceived}
                 />
             </div>
         );
@@ -130,7 +131,8 @@ const mapStateToProps = (state) => {
         playStatus: state.playStatus,
         chosenTrack: state.chosenTrack,
         tracks: state.tracks,
-        tiredness: state.tiredness
+        tiredness: state.tiredness,
+        isSleepQualityInputReceived: state.isSleepQualityInputReceived,
     };
 };
 
