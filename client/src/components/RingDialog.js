@@ -59,7 +59,7 @@ export default class RingDialog extends React.Component {
                 >
                     {
                         <div>
-                            <Sound url={this.props.chosenTrack}
+                            <Sound url="https://www.youtube.com/watch?v=VOp8bB0IZQs"
                                    playStatus={this.props.playStatus}
                                    loop={true} />
                             <b>{this.props.alarm.dateTime.format("HH:mm DD-MM-YYYY")}</b>
@@ -67,6 +67,10 @@ export default class RingDialog extends React.Component {
                             {this.props.alarm.message}
                             <br />
                             {this.props.tiredness}
+                            <br />
+                            <p>Did you sleep well?</p>
+                            <button>Yes</button>
+                            <button>No</button>
                         </div>
                     }
                 </Dialog>
