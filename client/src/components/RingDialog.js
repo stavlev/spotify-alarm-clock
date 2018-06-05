@@ -60,9 +60,19 @@ export default class RingDialog extends React.Component {
                 >
                     {
                         <div>
+                            /* Default alarm sound played when the alarm rings */
                             <Sound url="https://www.youtube.com/watch?v=VOp8bB0IZQs"
                                    playStatus={this.props.playStatus}
                                    loop={true}/>
+                            /* The chosen track calculated after an input is received from the user indicating if he slept well,
+                             * and after the default alarm sound was played */
+                            <Sound url={this.props.chosenTrack}
+                                   playStatus={
+                                       (this.props.isSleepQualityInputReceived && this.props.chosenTrack) ?
+                                           Sound.status.PLAYING :
+                                           Sound.status.STOPPED
+                                   }
+                                   loop={false}/>
                             <b>{this.props.alarm.dateTime.format("HH:mm DD-MM-YYYY")}</b>
                             <br/>
                             {this.props.alarm.message}
