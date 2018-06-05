@@ -36,14 +36,13 @@ export class Alarm extends Component {
     }
 
     checkIfAlarm = (openDialog) => {
-        const {dispatch, alarms, tracks} = this.props;
+        const {dispatch, alarms} = this.props;
         const rangAlarms = [];
 
         forEach(alarm => {
             var currentTime = new Date();
 
             if (alarm.dateTime.isSame(currentTime, 'minute') && alarm.isActive) {
-                /*dispatch(chooseTrack(tracks));*/
                 dispatch(openDialog({...alarm}));
                 rangAlarms.push(alarm);
             }
@@ -54,7 +53,7 @@ export class Alarm extends Component {
     };
 
     render() {
-        const {dispatch, user, newAlarm, alarms} = this.props;
+        const {dispatch, user, newAlarm, alarms, tracks} = this.props;
 
         return (
             <div>
@@ -112,6 +111,7 @@ export class Alarm extends Component {
                             playStatus={this.props.playStatus}
                             chosenTrack={this.props.chosenTrack}
                             isSleepQualityInputReceived={this.props.isSleepQualityInputReceived}
+                            tracks={tracks}
                 />
             </div>
         );
