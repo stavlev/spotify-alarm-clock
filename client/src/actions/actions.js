@@ -37,24 +37,11 @@ export const getMySavedTracks = () => {
     return dispatch => {
         dispatch({type: ActionTypes.SPOTIFY_FAVORITE_TRACKS_REQUESTED});
 
+        // Get the first 100 saved tracks of the user (getAudioFeaturesForTracks has a limit of 100 tracks)
         spotifyApi.getMySavedTracks({limit: 50})
             .then(data => {
                 tracks = tracks.concat(data.items);
                 if (data.next) {
-                    return spotifyApi.getGeneric(data.next);
-                }
-                return data;
-            })
-            .then(data => {
-                if (data.next) {
-                    tracks = tracks.concat(data.items);
-                    return spotifyApi.getGeneric(data.next);
-                }
-                return data;
-            })
-            .then(data => {
-                if (data.next) {
-                    tracks = tracks.concat(data.items);
                     return spotifyApi.getGeneric(data.next);
                 }
                 return data;
