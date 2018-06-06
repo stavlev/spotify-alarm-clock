@@ -114,8 +114,7 @@ export const handleClose = () => {
     };
 };
 
-export const handleUserSleepQualityInput = (tracks, didUserSleepWellInput) => {
-    chooseTrack(tracks, didUserSleepWellInput);
+export const handleUserSleepQualityInput = (didUserSleepWellInput) => {
     return {type: ActionTypes.HANDLE_USER_SLEEP_QUALITY_INPUT, didUserSleepWell: didUserSleepWellInput};
 };
 

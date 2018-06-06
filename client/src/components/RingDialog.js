@@ -4,7 +4,7 @@ import Dialog from 'material-ui/Dialog';
 import RaisedButton from 'material-ui/RaisedButton';
 import ActionAlarmOff from 'material-ui/svg-icons/action/alarm-off';
 import Sound from 'react-sound';
-import {handleOpen, handleClose, handleUserSleepQualityInput} from '../actions/actions';
+import {handleOpen, handleClose, handleUserSleepQualityInput, chooseTrack} from '../actions/actions';
 
 const customTitleStyle = {
     textAlign: 'center',
@@ -75,11 +75,17 @@ export default class RingDialog extends React.Component {
                             {this.props.alarm.message}
                             <br/>
                             <p>Have you slept well?</p>
-                            <button onClick={() => dispatch(handleUserSleepQualityInput(this.props.tracks, true))}
+                            <button onClick={() => {
+                                dispatch(handleUserSleepQualityInput(true));
+                                dispatch(chooseTrack(this.props.tracks, true));
+                            }}
                                     disabled={this.props.isSleepQualityInputReceived}>
                                 Yes
                             </button>
-                            <button onClick={() => dispatch(handleUserSleepQualityInput(this.props.tracks, false))}
+                            <button onClick={() => {
+                                dispatch(handleUserSleepQualityInput(false));
+                                dispatch(chooseTrack(this.props.tracks, false));
+                            }}
                                     disabled={this.props.isSleepQualityInputReceived}>
                                 No
                             </button>
